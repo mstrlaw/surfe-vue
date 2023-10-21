@@ -16,7 +16,20 @@ export default new Vuex.Store({
   },
   state: {
     // Notes data
-    notes: [],
+    notes: [
+      {
+        id: '1',
+        title: 'Some cool title',
+        body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius molestias id obcaecati fugit at, tempore voluptatem voluptates ad eveniet atque deserunt molestiae necessitatibus nihil iusto suscipit quos laborum maxime similique!',
+        updateDate: new Date(),
+      },
+      {
+        id: '2',
+        title: 'Another pretty cool title goes gere',
+        body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius molestias id obcaecati fugit at.',
+        updateDate: new Date(),
+      },
+    ],
   },
   actions: {
     // For Notes

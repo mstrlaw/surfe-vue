@@ -25,8 +25,9 @@ npm run test:unit
 npm run lint
 ```
 
-## UI/UX Implementation details
+## UI/UX Implementation Details
 
-1. The UI follows a mobile-first approach, reflected on how the breakpoint mixins are applied;
+1. The UI follows a mobile-first approach, reflected by how the breakpoint mixins are applied;
 2. CSS class naming follows BEMIT convention;
-3. We make use of SCSS preprocessor mainly for Mixins and Nesting; Native CSS custom properties are prefered over SCSS variables;
+3. CSS attributes are ordered alphabetically;
+4. We make use of SCSS preprocessor mainly for Mixins and Nesting; Native CSS custom properties are prefered over SCSS variables;

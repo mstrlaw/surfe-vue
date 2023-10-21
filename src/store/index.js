@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import toast from '@/store/notification.js'
+import ACTIONS from '@/store/ACTIONS.js'
 
 Vue.use(Vuex)
 
@@ -9,11 +11,16 @@ const BLANK_NOTE_DATA = {
 }
 
 export default new Vuex.Store({
+  modules: {
+    toast,
+  },
   state: {
+    // Notes data
     notes: [],
   },
   actions: {
-    addNewNote({ state, commit }) {
+    // For Notes
+    [ACTIONS.ADD_NOTE]({ state, commit }) {
       const newNote = {
         id: crypto.randomUUID(),
         title: `Note #${state.notes.length + 1}`,
@@ -21,7 +28,7 @@ export default new Vuex.Store({
       }
       commit('setNewNote', newNote)
     },
-    deleteNote({ commit }, noteId) {
+    [ACTIONS.DELETE_NOTE]({ commit }, noteId) {
       commit('removeNote', noteId)
     },
   },

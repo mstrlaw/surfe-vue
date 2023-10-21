@@ -1,5 +1,5 @@
 <script>
-import { mapActions } from 'vuex'
+import ACTIONS from '@/store/ACTIONS.js'
 import UIButton from '@/components/ui/Button.vue'
 
 export default {
@@ -26,7 +26,17 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['deleteNote']),
+    toggleDeletionWarning() {
+      this.$store.dispatch(ACTIONS.SHOW_NOTIFICATION, {
+        message: `Delete note "${this.title.substring(0, 15).trim()}" ?`,
+        hasDismiss: true,
+        hasAccept: true,
+        acceptButtonLabel: 'Delete',
+        accept: () => {
+          this.$store.dispatch(ACTIONS.DELETE_NOTE, this.id)
+        },
+      })
+    },
     toggleBold() {
       console.info('toggleBold')
     },
@@ -59,7 +69,7 @@ export default {
         <UIButton user-label="B" @on-click="toggleBold" />
         <UIButton user-label="I" @on-click="toggleItalics" />
       </div>
-      <UIButton user-label="Delete" @on-click="deleteNote(id)" />
+      <UIButton user-label="Delete" @on-click="toggleDeletionWarning" />
     </div>
   </article>
 </template>

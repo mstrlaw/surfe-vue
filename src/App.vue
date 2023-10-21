@@ -1,4 +1,5 @@
 <script>
+import { mapState, mapActions } from 'vuex'
 import SurfeNote from '@/components/notes/Note.vue'
 import UIButton from '@/components/ui/Button.vue'
 import UINav from '@/components/ui/Navigation.vue'
@@ -9,23 +10,9 @@ export default {
     UIButton,
     UINav,
   },
-  data: () => ({
-    notes: [
-      {
-        id: '1',
-        title: 'Some cool title',
-        body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius molestias id obcaecati fugit at.',
-        updateDate: new Date(),
-      },
-      {
-        id: '2',
-        title: 'Another pretty cool title goes gere',
-        body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius molestias id obcaecati fugit at, tempore voluptatem voluptates ad eveniet atque deserunt molestiae necessitatibus nihil iusto suscipit quos laborum maxime similique!',
-        updateDate: new Date(),
-      },
-    ],
-  }),
+  // data: () => ({}),
   computed: {
+    ...mapState(['notes']),
     hasNotes() {
       return this.notes.length > 0
     },
@@ -34,9 +21,7 @@ export default {
     },
   },
   methods: {
-    addBlankNote() {
-      console.info('addBlankNote')
-    },
+    ...mapActions(['addNewNote']),
   },
 }
 </script>
@@ -57,7 +42,7 @@ export default {
       </template>
       <div v-else class="c-Empty">
         <h1>You have no notes 🌊</h1>
-        <UIButton user-label="New Note" @on-click="addBlankNote" />
+        <UIButton user-label="New Note" @on-click="addNewNote" />
       </div>
     </main>
   </div>

@@ -40,13 +40,19 @@ export default {
 
 <template>
   <article class="c-Note">
-    <h1 contenteditable class="c-Note__title">{{ title }}</h1>
+    <h1 contenteditable class="c-Note__title" data-placeholder="Note title">
+      {{ title }}
+    </h1>
     <div class="c-Note__meta">
       <p>
         <time :datetime="updateDate"> {{ updateDate.toISOString() }}</time>
       </p>
     </div>
-    <div contenteditable class="c-Note__body">
+    <div
+      contenteditable
+      class="c-Note__body"
+      data-placeholder="Add details to this note"
+    >
       {{ body }}
     </div>
     <div class="c-Note__actions">
@@ -77,6 +83,9 @@ export default {
     padding: 0 calc(var(--base-gap) / 4); // Avoids having text too close to focus outline when editing
   }
 
+  &__title {
+    min-height: 1.6em; // For when element is empty
+  }
   &__body {
     margin: var(--base-gap) 0;
     min-height: calc(var(--base-gap) * 4);
@@ -93,6 +102,16 @@ export default {
   &:hover {
     @include transition(background-color);
     background-color: var(--color-background-mute);
+  }
+  /**
+   CSS only placeholder doesn't work properly.
+   TODO: Fix or remove.
+   */
+  &:empty:not(:focus):before {
+    color: var(--color-placeholder);
+    content: attr(data-placeholder);
+    display: block;
+    pointer-events: none;
   }
 }
 </style>

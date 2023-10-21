@@ -1,4 +1,5 @@
 <script>
+import { mapActions } from 'vuex'
 import UIButton from '@/components/ui/Button.vue'
 
 export default {
@@ -7,16 +8,14 @@ export default {
     UIButton,
   },
   methods: {
-    addBlankNote() {
-      console.info('addBlankNote')
-    },
+    ...mapActions(['addNewNote']),
   },
 }
 </script>
 
 <template>
   <nav class="c-Nav">
-    <UIButton user-label="New Note" @on-click="addBlankNote" />
+    <UIButton user-label="New Note" @on-click="addNewNote" />
   </nav>
 </template>
 

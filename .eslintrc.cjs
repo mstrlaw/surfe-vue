@@ -10,10 +10,16 @@ module.exports = {
   ],
   rules: {
     'prettier/prettier': [
-      'warn',
+      'error',
       {
         singleQuote: true,
         semi: false,
+      },
+    ],
+    'no-multiple-empty-lines': [
+      'error',
+      {
+        max: 1,
       },
     ],
     semi: ['error', 'never'],

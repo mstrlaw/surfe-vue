@@ -24,3 +24,7 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+
+## Implementation details
+
+1. The app follows a mobile-first approach, reflected on how the breakpoint mixins are applied;

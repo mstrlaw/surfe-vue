@@ -10,20 +10,7 @@ const BLANK_NOTE_DATA = {
 
 export default new Vuex.Store({
   state: {
-    notes: [
-      {
-        id: '1',
-        title: 'Some cool title',
-        body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius molestias id obcaecati fugit at.',
-        updateDate: new Date(),
-      },
-      {
-        id: '2',
-        title: 'Another pretty cool title goes gere',
-        body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius molestias id obcaecati fugit at, tempore voluptatem voluptates ad eveniet atque deserunt molestiae necessitatibus nihil iusto suscipit quos laborum maxime similique!',
-        updateDate: new Date(),
-      },
-    ],
+    notes: [],
   },
   actions: {
     addNewNote({ state, commit }) {
@@ -34,10 +21,17 @@ export default new Vuex.Store({
       }
       commit('setNewNote', newNote)
     },
+    deleteNote({ commit }, noteId) {
+      commit('removeNote', noteId)
+    },
   },
   mutations: {
     setNewNote(state, note) {
       state.notes.unshift(note)
-    }
+    },
+    removeNote(state, noteId) {
+      const matchedIndex = state.notes.findIndex((note) => note.id === noteId)
+      state.notes.splice(matchedIndex, 1)
+    },
   },
 })

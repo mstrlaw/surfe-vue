@@ -1,4 +1,5 @@
 <script>
+import { mapActions } from 'vuex'
 import UIButton from '@/components/ui/Button.vue'
 
 export default {
@@ -25,14 +26,12 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['deleteNote']),
     toggleBold() {
       console.info('toggleBold')
     },
     toggleItalics() {
       console.info('toggleItalics')
-    },
-    deleteNote() {
-      console.info('deleteNote')
     },
   },
 }
@@ -60,7 +59,7 @@ export default {
         <UIButton user-label="B" @on-click="toggleBold" />
         <UIButton user-label="I" @on-click="toggleItalics" />
       </div>
-      <UIButton user-label="Delete" @on-click="deleteNote" />
+      <UIButton user-label="Delete" @on-click="deleteNote(id)" />
     </div>
   </article>
 </template>

@@ -12,7 +12,7 @@
 
   --c-divider-light-1: rgba(60, 60, 60, 0.29);
   --c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --c-divider-dadarkrk-1: rgba(84, 84, 84, 0.65);
+  --c-divider-dark-1: rgba(84, 84, 84, 0.65);
   --c-divider-dark-2: rgba(84, 84, 84, 0.48);
 
   --c-text-light-1: var(--c-black-soft);
@@ -32,6 +32,7 @@
 
   --color-heading: var(--c-text-light-1);
   --color-text: var(--c-text-light-1);
+  --color-placeholder: var(--c-divider-dark-1);
 
   --base-gap: 1em;
   --base-radius: 0.25em;

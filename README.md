@@ -1,40 +1,25 @@
 # surfe-vue
 
-This template should help get you started developing with Vue 3 in Vite.
+Frontend challenge for Surfe.
 
-## Recommended IDE Setup
+### Running the project
+1. `cd` into `surfe-vue`
+2. Install dependencies with `npm i`
+3. Run it with `npm run dev`
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
+### Build it
 
 ```sh
 npm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+### Run Unit Tests
 
 ```sh
 npm run test:unit
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### Lint
 
 ```sh
 npm run lint

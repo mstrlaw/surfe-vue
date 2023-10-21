@@ -1,7 +1,5 @@
 <script>
-export default {
-  name: "HelloThere",
-}
+export default {};
 </script>
 
 <template>

@@ -28,6 +28,7 @@
   }
 }
 
+// Only works for single property..
 @mixin transition($property) {
-  transition: $property ease-in-out 0.25s;
+  transition: $property ease 0.25s;
 }

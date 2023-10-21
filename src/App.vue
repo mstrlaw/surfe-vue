@@ -1,27 +1,33 @@
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import SurfeNote from '@/components/notes/Note.vue'
 import UIButton from '@/components/ui/Button.vue'
 import UINav from '@/components/ui/Navigation.vue'
+import UINotification from '@/components/ui/Notification.vue'
+import ACTIONS from '@/store/ACTIONS.js'
 
 export default {
   components: {
     SurfeNote,
     UIButton,
     UINav,
+    UINotification,
   },
-  // data: () => ({}),
+  data: () => ({
+    ACTIONS,
+  }),
   computed: {
     ...mapState(['notes']),
+    ...mapState({
+      hasActiveNotification: (state) => state.toast.hasActiveNotification,
+      notificationData: (state) => state.toast.notificationData,
+    }),
     hasNotes() {
       return this.notes.length > 0
     },
     containerClass() {
       return this.hasNotes ? 'u-Container' : 'u-Container u-Container--isEmpty'
     },
-  },
-  methods: {
-    ...mapActions(['addNewNote']),
   },
 }
 </script>
@@ -42,9 +48,24 @@ export default {
       </template>
       <div v-else class="c-Empty">
         <h1>You have no notes 🌊</h1>
-        <UIButton user-label="New Note" @on-click="addNewNote" />
+        <UIButton
+          user-label="New Note"
+          @on-click="$store.dispatch(ACTIONS.ADD_NOTE)"
+        />
       </div>
     </main>
+    <!-- Notification Toast -->
+    <UINotification
+      v-if="hasActiveNotification"
+      :message="notificationData.message"
+      :has-dismiss="notificationData.hasDismiss"
+      :dismiss-button-label="notificationData.dismissButtonLabel"
+      :on-dismiss="notificationData.dismiss"
+      :has-accept="notificationData.hasAccept"
+      :accept-button-label="notificationData.acceptButtonLabel"
+      :on-accept="notificationData.accept"
+      :delay-timer="notificationData.displayTimer"
+    />
   </div>
 </template>
 

@@ -27,3 +27,7 @@
     @content;
   }
 }
+
+@mixin transition($property) {
+  transition: $property ease-in-out 0.25s;
+}

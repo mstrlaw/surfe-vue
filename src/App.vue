@@ -1,4 +1,7 @@
-<script setup>
+<script>
+export default {
+  name: "HelloThere",
+}
 </script>
 
 <template>
@@ -7,5 +10,4 @@
   </main>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -1,0 +1,26 @@
+# EditorConfig (see https://EditorConfig.org)
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+
+[*.{js,vue}]
+# As a company with the majority of the machines running mac, we set our the end of line to lf
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+insert_final_newline = true
+charset = utf-8
+# Set default charset
+indent_style = space
+indent_size = 2
+root = true
+quote_type = 'single'
+
+
+[*.md]
+trim_trailing_whitespace = false

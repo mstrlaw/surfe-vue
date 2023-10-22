@@ -52,8 +52,11 @@ export default {
       })
     },
     saveNote() {
-      console.log('saveNote')
-      // console.log(this.$refs.noteBody.innerHTML)
+      this.$store.dispatch(ACTIONS.SAVE_NOTE, {
+        id: this.id,
+        title: this.$refs.noteTitle.innerText,
+        body: this.$refs.noteBody.innerHTML,
+      })
     },
     applyStyle(STYLE) {
       const selection = window.getSelection()
@@ -93,6 +96,7 @@ export default {
 <template>
   <article :id="id" class="c-Note">
     <h1
+      ref="noteTitle"
       contenteditable
       class="c-Note__title"
       data-placeholder="Note title"

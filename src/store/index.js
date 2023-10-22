@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import toast from '@/store/notification.js'
 import ACTIONS from '@/store/ACTIONS.js'
+import { debounce } from '@/utilities.js'
 
 Vue.use(Vuex)
 
@@ -33,9 +34,6 @@ export default new Vuex.Store({
     ],
   },
   actions: {
-    [ACTIONS.SAVE_ACTIVE_NOTE]({ commit }, noteId) {
-      commit('saveActiveNoteId', noteId)
-    },
     [ACTIONS.ADD_NOTE]({ state, commit }) {
       const newNote = {
         id: crypto.randomUUID(),
@@ -44,17 +42,32 @@ export default new Vuex.Store({
       }
       commit('setNewNote', newNote)
     },
+    [ACTIONS.SAVE_ACTIVE_NOTE]({ commit }, noteId) {
+      commit('saveActiveNoteId', noteId)
+    },
+    [ACTIONS.SAVE_NOTE]: debounce(({ commit }, noteData) => {
+      commit('saveNote', noteData)
+    }, 1250),
     [ACTIONS.DELETE_NOTE]({ commit }, noteId) {
       commit('removeNote', noteId)
     },
   },
   mutations: {
-    saveActiveNoteId(state, noteId) {
-      console.log('saveActiveNoteId', noteId)
-      state.activeNoteId = noteId
-    },
     setNewNote(state, note) {
       state.notes.unshift(note)
+    },
+    saveActiveNoteId(state, noteId) {
+      state.activeNoteId = noteId
+    },
+    saveNote(state, noteData) {
+      const matchedIndex = state.notes.findIndex(
+        (note) => note.id === noteData.id
+      )
+      const updateData = {
+        ...noteData,
+        updateDate: new Date(),
+      }
+      state.notes.splice(matchedIndex, 1, updateData)
     },
     removeNote(state, noteId) {
       const matchedIndex = state.notes.findIndex((note) => note.id === noteId)

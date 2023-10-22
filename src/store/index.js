@@ -20,7 +20,7 @@ export default new Vuex.Store({
       {
         id: '1',
         title: 'Some cool title',
-        body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius molestias id obcaecati fugit at, tempore voluptatem voluptates ad eveniet atque deserunt molestiae necessitatibus nihil iusto suscipit quos laborum maxime similique!',
+        body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius <strong>molestias</strong> id obcaecati fugit at, tempore voluptatem voluptates ad eveniet atque deserunt molestiae necessitatibus nihil iusto suscipit quos laborum maxime similique!',
         updateDate: new Date(),
       },
       {

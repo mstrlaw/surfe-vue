@@ -1,12 +1,16 @@
 <script>
 import ACTIONS from '@/store/ACTIONS.js'
 import UIButton from '@/components/ui/Button.vue'
+import { STYLE_TYPES, toggleWrappingTag } from '@/components/notes/DOMutils.js'
 
 export default {
   name: 'SurfeNote',
   components: {
     UIButton,
   },
+  data: () => ({
+    STYLE_TYPES,
+  }),
   props: {
     id: {
       type: String,
@@ -41,38 +45,17 @@ export default {
       console.log('updateBody')
       // console.log(this.$refs.noteBody.innerHTML)
     },
-    toggleBold() {
-      const sel = window.getSelection()
-      const hasSelectedBody =
-        sel.anchorNode.parentNode.className === 'c-Note__body'
+    applyStyle(STYLE) {
+      const selection = window.getSelection()
+      const modifiedRange = toggleWrappingTag(selection, STYLE)
 
-      if (sel.rangeCount) {
-        const range = sel.getRangeAt(0).cloneRange()
+      selection.removeAllRanges()
+      selection.addRange(modifiedRange)
 
-        if (
-          range.startContainer.parentElement &&
-          range.startContainer.parentElement.tagName === 'STRONG'
-        ) {
-          const strong = range.startContainer.parentElement
-          console.log(strong.firstChild)
-          // Remove the now empty strong tag
-          strong.parentNode.removeChild(strong)
-          // Move the content out of the strong tag
-          while (strong.firstChild) {
-            range.insertNode(strong.firstChild)
-          }
-        } else if (hasSelectedBody) {
-          const strong = document.createElement('strong')
-          range.surroundContents(strong)
-        }
+      selection.removeAllRanges() // Unselect text
 
-        sel.removeAllRanges()
-        sel.addRange(range)
-        this.updateBody()
-      }
-    },
-    toggleItalics() {
-      console.info('toggleItalics')
+      // Manually trigger body update method
+      this.updateBody()
     },
   },
 }
@@ -93,15 +76,13 @@ export default {
       contenteditable
       class="c-Note__body"
       data-placeholder="Add details to this note"
+      v-html="body"
       @input="updateBody"
-      @blur="updateBody"
-    >
-      {{ body }}
-    </div>
+    />
     <div class="c-Note__actions">
       <div class="c-Note__actionsLeft">
-        <UIButton user-label="B" @on-click="toggleBold" />
-        <UIButton user-label="I" @on-click="toggleItalics" />
+        <UIButton user-label="B" @on-click="applyStyle(STYLE_TYPES.BOLD)" />
+        <UIButton user-label="I" @on-click="applyStyle(STYLE_TYPES.ITALIC)" />
       </div>
       <UIButton user-label="Delete" @on-click="toggleDeletionWarning" />
     </div>

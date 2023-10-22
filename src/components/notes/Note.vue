@@ -47,22 +47,28 @@ export default {
     },
     applyStyle(STYLE) {
       const selection = window.getSelection()
-      const modifiedRange = toggleWrappingTag(selection, STYLE)
+      const hasSelectedBody =
+        selection.anchorNode.parentNode.closest('.c-Note__body')
+      // This way we ensure we aren't applying any styles outside of a Note's body
+      if (hasSelectedBody) {
+        const modifiedRange = toggleWrappingTag(selection, STYLE)
 
-      selection.removeAllRanges()
-      selection.addRange(modifiedRange)
+        // Applies range
+        selection.removeAllRanges()
+        selection.addRange(modifiedRange)
 
-      selection.removeAllRanges() // Unselect text
+        selection.removeAllRanges() // Unselects text
 
-      // Manually trigger body update method
-      this.updateBody()
+        // Manually trigger body update
+        this.updateBody()
+      }
     },
   },
 }
 </script>
 
 <template>
-  <article class="c-Note">
+  <article :id="id" class="c-Note">
     <h1 contenteditable class="c-Note__title" data-placeholder="Note title">
       {{ title }}
     </h1>

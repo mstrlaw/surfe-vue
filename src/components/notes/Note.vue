@@ -37,8 +37,39 @@ export default {
         },
       })
     },
+    updateBody() {
+      console.log('updateBody')
+      // console.log(this.$refs.noteBody.innerHTML)
+    },
     toggleBold() {
-      console.info('toggleBold')
+      const sel = window.getSelection()
+      const hasSelectedBody =
+        sel.anchorNode.parentNode.className === 'c-Note__body'
+
+      if (sel.rangeCount) {
+        const range = sel.getRangeAt(0).cloneRange()
+
+        if (
+          range.startContainer.parentElement &&
+          range.startContainer.parentElement.tagName === 'STRONG'
+        ) {
+          const strong = range.startContainer.parentElement
+          console.log(strong.firstChild)
+          // Remove the now empty strong tag
+          strong.parentNode.removeChild(strong)
+          // Move the content out of the strong tag
+          while (strong.firstChild) {
+            range.insertNode(strong.firstChild)
+          }
+        } else if (hasSelectedBody) {
+          const strong = document.createElement('strong')
+          range.surroundContents(strong)
+        }
+
+        sel.removeAllRanges()
+        sel.addRange(range)
+        this.updateBody()
+      }
     },
     toggleItalics() {
       console.info('toggleItalics')
@@ -58,9 +89,12 @@ export default {
       </p>
     </div>
     <div
+      ref="noteBody"
       contenteditable
       class="c-Note__body"
       data-placeholder="Add details to this note"
+      @input="updateBody"
+      @blur="updateBody"
     >
       {{ body }}
     </div>

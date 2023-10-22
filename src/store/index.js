@@ -16,6 +16,7 @@ export default new Vuex.Store({
   },
   state: {
     // Notes data
+    activeNoteId: null,
     notes: [
       {
         id: '1',
@@ -32,7 +33,9 @@ export default new Vuex.Store({
     ],
   },
   actions: {
-    // For Notes
+    [ACTIONS.SAVE_ACTIVE_NOTE]({ commit }, noteId) {
+      commit('saveActiveNoteId', noteId)
+    },
     [ACTIONS.ADD_NOTE]({ state, commit }) {
       const newNote = {
         id: crypto.randomUUID(),
@@ -46,6 +49,10 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    saveActiveNoteId(state, noteId) {
+      console.log('saveActiveNoteId', noteId)
+      state.activeNoteId = noteId
+    },
     setNewNote(state, note) {
       state.notes.unshift(note)
     },

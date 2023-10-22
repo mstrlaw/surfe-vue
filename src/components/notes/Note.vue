@@ -1,4 +1,5 @@
 <script>
+import { mapState } from 'vuex'
 import ACTIONS from '@/store/ACTIONS.js'
 import UIButton from '@/components/ui/Button.vue'
 import { STYLE_TYPES, toggleWrappingTag } from '@/components/notes/DOMutils.js'
@@ -29,7 +30,16 @@ export default {
       default: () => new Date(),
     },
   },
+  computed: {
+    ...mapState(['activeNoteId']),
+    isActiveNote() {
+      return this.id === this.activeNoteId
+    },
+  },
   methods: {
+    setActiveNote() {
+      this.$store.dispatch(ACTIONS.SAVE_ACTIVE_NOTE, this.id)
+    },
     toggleDeletionWarning() {
       this.$store.dispatch(ACTIONS.SHOW_NOTIFICATION, {
         message: `Delete note "${this.title.substring(0, 15).trim()}" ?`,
@@ -41,8 +51,8 @@ export default {
         },
       })
     },
-    updateBody() {
-      console.log('updateBody')
+    saveNote() {
+      console.log('saveNote')
       // console.log(this.$refs.noteBody.innerHTML)
     },
     applyStyle(STYLE) {
@@ -50,17 +60,30 @@ export default {
       const hasSelectedBody =
         selection.anchorNode.parentNode.closest('.c-Note__body')
       // This way we ensure we aren't applying any styles outside of a Note's body
-      if (hasSelectedBody) {
-        const modifiedRange = toggleWrappingTag(selection, STYLE)
+      if (this.isActiveNote && hasSelectedBody) {
+        try {
+          const modifiedRange = toggleWrappingTag(selection, STYLE)
 
-        // Applies range
-        selection.removeAllRanges()
-        selection.addRange(modifiedRange)
+          // Applies range
+          selection.removeAllRanges()
+          selection.addRange(modifiedRange)
 
-        selection.removeAllRanges() // Unselects text
+          selection.removeAllRanges() // Unselects text
 
-        // Manually trigger body update
-        this.updateBody()
+          // Manually trigger body update
+          this.saveNote()
+        } catch (error) {
+          /**
+           * This seems to happen mainly because of the selection
+           * overlapping with non-text, such as a tag start/end.
+           * It requires the user to precisely select the text within
+           * boundaries to toggle styles.
+           * For now, keeping this issue..
+           */
+          this.$store.dispatch(ACTIONS.SHOW_NOTIFICATION, {
+            message: `Couldn't apply style to selected text.`,
+          })
+        }
       }
     },
   },
@@ -69,7 +92,13 @@ export default {
 
 <template>
   <article :id="id" class="c-Note">
-    <h1 contenteditable class="c-Note__title" data-placeholder="Note title">
+    <h1
+      contenteditable
+      class="c-Note__title"
+      data-placeholder="Note title"
+      @input="saveNote"
+      @focus="setActiveNote"
+    >
       {{ title }}
     </h1>
     <div class="c-Note__meta">
@@ -83,7 +112,8 @@ export default {
       class="c-Note__body"
       data-placeholder="Add details to this note"
       v-html="body"
-      @input="updateBody"
+      @input="saveNote"
+      @focus="setActiveNote"
     />
     <div class="c-Note__actions">
       <div class="c-Note__actionsLeft">

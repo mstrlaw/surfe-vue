@@ -39,9 +39,10 @@ export default new Vuex.Store({
     [ACTIONS.SAVE_ACTIVE_NOTE]({ commit }, noteId) {
       commit('setActiveNoteId', noteId)
     },
+    // We wrap the whole save action in our debounce utility function
     [ACTIONS.SAVE_NOTE]: debounce(({ commit }, noteData) => {
       commit('setNoteData', noteData)
-    }),
+    }, 1250),
     [ACTIONS.DELETE_NOTE]({ commit }, noteId) {
       commit('removeNote', noteId)
     },

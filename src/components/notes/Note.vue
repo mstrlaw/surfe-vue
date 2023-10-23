@@ -81,6 +81,12 @@ export default {
         }
       }
     },
+    // When pasting content we only allow plain text to be added.
+    handlePastedContent(event) {
+      event.preventDefault()
+      const plainText = (event.originalEvent || event).clipboardData.getData('text/plain')
+      window.document.execCommand('insertText', false, plainText)
+    },
     saveNote() {
       this.$store.dispatch(ACTIONS.SAVE_NOTE, {
         id: this.id,
@@ -112,6 +118,7 @@ export default {
       data-placeholder="Note title"
       @input="saveNote"
       @focus="setActiveNote"
+      @paste="handlePastedContent"
     >
       {{ title }}
     </h1>
@@ -128,6 +135,7 @@ export default {
       v-html="localBody"
       @input="saveNote"
       @focus="setActiveNote"
+      @paste="handlePastedContent"
     />
     <div class="c-Note__actions">
       <div class="c-Note__actionsLeft">

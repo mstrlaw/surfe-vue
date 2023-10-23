@@ -31,3 +31,27 @@ npm run lint
 2. CSS class naming follows BEMIT convention;
 3. CSS attributes are ordered alphabetically;
 4. We make use of SCSS preprocessor mainly for Mixins and Nesting; Native CSS custom properties are prefered over SCSS variables;
+
+## Session Loading Lifecycle
+
+The app will try to load Notes from an existing localstate value. If none exists, one is created and later used.
+
+### Flow
+```mermaid
+flowchart TB
+    START((Load App))
+    GET_NOTES(Get Notes from Server)
+    KEEP_SESSION(Store to Vuex Store)
+    GENERATE(Generate New Session)
+    TO_STATE(Store to browser localstate)
+    TO_STORE(Store to Vuex Store)
+    END((Finished\nLoading))
+
+    START --> CHECK_STATE{Has Session in\n localstate?}
+    CHECK_STATE -- YES --> KEEP_SESSION --> GET_NOTES
+    CHECK_STATE -- NO --> GENERATE
+    GENERATE --> TO_STATE
+    TO_STATE --> TO_STORE
+    GET_NOTES --> TO_STORE
+    TO_STORE --> END
+```

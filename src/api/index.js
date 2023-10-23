@@ -1,28 +1,37 @@
 import axios from 'axios'
 
-export default {
-  GET_SESSION: async () => {
-    await new Promise((resolve) => {
-      console.log('GET_SESSION')
-      resolve()
+// Axios instance
+const service = axios.create({
+  baseURL: import.meta.env.VITE_API_ENDPOINT,
+})
+
+export const REQUESTS = {
+  CREATE_NOTE: 'CREATE_NOTE',
+  GET_NOTES: 'GET_NOTES',
+  SAVE_NOTE: 'SAVE_NOTE',
+}
+
+/**
+ * Our API service, used via Store actions.
+ */
+export const API = {
+  [REQUESTS.CREATE_NOTE]: (sessionId, noteData) => {
+    return service.post(`/${sessionId}/notes`, {
+      body: JSON.stringify(noteData),
     })
   },
-  POST_SESSION: async () => {
-    await new Promise((resolve) => {
-      console.log('POST_SESSION')
-      resolve()
+  [REQUESTS.GET_NOTES]: (sessionId) => {
+    return service.get(`/${sessionId}/notes`)
+  },
+  [REQUESTS.SAVE_NOTE]: (sessionId, noteId, noteData) => {
+    return service.put(`/${sessionId}/notes/${noteId}`, {
+      body: JSON.stringify(noteData),
     })
   },
-  GET_NOTES: async () => {
-    await new Promise((resolve) => {
-      console.log('GET_NOTES')
-      resolve()
-    })
-  },
-  PUT_NOTE: async () => {
-    await new Promise((resolve) => {
-      console.log('PUT_NOTE')
-      resolve()
-    })
-  },
+  // Not using this one for now
+  // GET_NOTE: () => {
+  //   return new Promise((resolve) => {
+  //     resolve()
+  //   })
+  // },
 }

@@ -17,8 +17,8 @@ export default {
     ACTIONS,
   }),
   computed: {
-    ...mapState(['notes']),
     ...mapState({
+      notes: (state) => state.notes.notes,
       hasActiveNotification: (state) => state.toast.hasActiveNotification,
       notificationData: (state) => state.toast.notificationData,
     }),

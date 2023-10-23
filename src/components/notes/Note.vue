@@ -32,7 +32,9 @@ export default {
     },
   },
   computed: {
-    ...mapState(['activeNoteId']),
+    ...mapState({
+      activeNoteId: (state) => state.notes.activeNoteId,
+    }),
     isActiveNote() {
       return this.id === this.activeNoteId
     },

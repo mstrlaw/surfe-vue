@@ -11,6 +11,7 @@ export default {
   },
   data: () => ({
     STYLE_TYPES,
+    localBody: '',
   }),
   props: {
     id: {
@@ -36,27 +37,18 @@ export default {
       return this.id === this.activeNoteId
     },
   },
+  mounted() {
+    /**
+     * When we mount the compoent, we work with a local instance of
+     * the Note's body.
+     * This way we avoid re-rendering the component when saving the Note
+     * and all types of infernal caret re-positioning issues.
+     */
+    this.localBody = this.body
+  },
   methods: {
     setActiveNote() {
       this.$store.dispatch(ACTIONS.SAVE_ACTIVE_NOTE, this.id)
-    },
-    toggleDeletionWarning() {
-      this.$store.dispatch(ACTIONS.SHOW_NOTIFICATION, {
-        message: `Delete note "${this.title.substring(0, 15).trim()}" ?`,
-        hasDismiss: true,
-        hasAccept: true,
-        acceptButtonLabel: 'Delete',
-        accept: () => {
-          this.$store.dispatch(ACTIONS.DELETE_NOTE, this.id)
-        },
-      })
-    },
-    saveNote() {
-      this.$store.dispatch(ACTIONS.SAVE_NOTE, {
-        id: this.id,
-        title: this.$refs.noteTitle.innerText,
-        body: this.$refs.noteBody.innerHTML,
-      })
     },
     applyStyle(STYLE) {
       const selection = window.getSelection()
@@ -89,6 +81,24 @@ export default {
         }
       }
     },
+    saveNote() {
+      this.$store.dispatch(ACTIONS.SAVE_NOTE, {
+        id: this.id,
+        title: this.$refs.noteTitle.innerText,
+        body: this.$refs.noteBody.innerHTML,
+      })
+    },
+    toggleDeletionWarning() {
+      this.$store.dispatch(ACTIONS.SHOW_NOTIFICATION, {
+        message: `Delete note "${this.title.substring(0, 15).trim()}" ?`,
+        hasDismiss: true,
+        hasAccept: true,
+        acceptButtonLabel: 'Delete',
+        accept: () => {
+          this.$store.dispatch(ACTIONS.DELETE_NOTE, this.id)
+        },
+      })
+    },
   },
 }
 </script>
@@ -115,7 +125,7 @@ export default {
       contenteditable
       class="c-Note__body"
       data-placeholder="Add details to this note"
-      v-html="body"
+      v-html="localBody"
       @input="saveNote"
       @focus="setActiveNote"
     />

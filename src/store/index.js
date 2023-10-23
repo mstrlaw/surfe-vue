@@ -7,7 +7,7 @@ import { debounce } from '@/utilities.js'
 Vue.use(Vuex)
 
 const BLANK_NOTE_DATA = {
-  body: `My note's content`,
+  body: '',
   updateDate: new Date(),
 }
 
@@ -21,13 +21,7 @@ export default new Vuex.Store({
     notes: [
       {
         id: '1',
-        title: 'Some cool title',
-        body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius <strong>molestias</strong> id obcaecati fugit at, tempore voluptatem voluptates ad eveniet atque deserunt molestiae necessitatibus nihil iusto suscipit quos laborum maxime similique!',
-        updateDate: new Date(),
-      },
-      {
-        id: '2',
-        title: 'Another pretty cool title goes gere',
+        title: 'A cool title goes here',
         body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius molestias id obcaecati fugit at.',
         updateDate: new Date(),
       },
@@ -43,11 +37,11 @@ export default new Vuex.Store({
       commit('setNewNote', newNote)
     },
     [ACTIONS.SAVE_ACTIVE_NOTE]({ commit }, noteId) {
-      commit('saveActiveNoteId', noteId)
+      commit('setActiveNoteId', noteId)
     },
     [ACTIONS.SAVE_NOTE]: debounce(({ commit }, noteData) => {
-      commit('saveNote', noteData)
-    }, 1250),
+      commit('setNoteData', noteData)
+    }),
     [ACTIONS.DELETE_NOTE]({ commit }, noteId) {
       commit('removeNote', noteId)
     },
@@ -56,10 +50,10 @@ export default new Vuex.Store({
     setNewNote(state, note) {
       state.notes.unshift(note)
     },
-    saveActiveNoteId(state, noteId) {
+    setActiveNoteId(state, noteId) {
       state.activeNoteId = noteId
     },
-    saveNote(state, noteData) {
+    setNoteData(state, noteData) {
       const matchedIndex = state.notes.findIndex(
         (note) => note.id === noteData.id
       )

@@ -31,6 +31,12 @@ export default new Vuex.Store({
     toast,
   },
   state: {
+    isAppLoading: true,
     session: getOrSetSession(),
+  },
+  mutations: {
+    setAppLoaded(state) {
+      state.isAppLoading = false
+    },
   },
 })

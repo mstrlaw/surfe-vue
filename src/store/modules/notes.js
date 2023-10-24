@@ -30,6 +30,7 @@ export default {
             }
           })
           commit('setNotes', notesData)
+          commit('setAppLoaded')
         })
         .catch((error) => {
           // Ideally log error to Sentry or similar

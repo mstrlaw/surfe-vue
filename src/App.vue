@@ -17,8 +17,9 @@ export default {
     ACTIONS,
   }),
   computed: {
-    ...mapState(['notes']),
     ...mapState({
+      session: (state) => state.session,
+      notes: (state) => state.notes.notes,
       hasActiveNotification: (state) => state.toast.hasActiveNotification,
       notificationData: (state) => state.toast.notificationData,
     }),
@@ -29,6 +30,10 @@ export default {
       return this.hasNotes ? 'u-Container' : 'u-Container u-Container--isEmpty'
     },
   },
+  mounted() {
+    // Load Notes from session, if any
+    this.$store.dispatch(ACTIONS.GET_NOTES)
+  }
 }
 </script>
 

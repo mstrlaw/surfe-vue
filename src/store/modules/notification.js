@@ -24,7 +24,7 @@ export default {
   },
   actions: {
     [ACTIONS.SHOW_NOTIFICATION]({ state }, notificationData) {
-      state.hasActiveNotification = !state.hasActiveNotification
+      state.hasActiveNotification = true
       state.notificationData = {
         ...notificationData,
       }

@@ -15,24 +15,26 @@ export default {
   }),
   props: {
     id: {
-      type: String,
-      default: '',
+      type: Number,
+      required: true,
     },
     title: {
       type: String,
-      default: '',
+      required: true,
     },
     body: {
       type: String,
-      default: '',
+      required: true,
     },
     updateDate: {
-      type: Date,
-      default: () => new Date(),
+      type: String,
+      required: true,
     },
   },
   computed: {
-    ...mapState(['activeNoteId']),
+    ...mapState({
+      activeNoteId: (state) => state.notes.activeNoteId,
+    }),
     isActiveNote() {
       return this.id === this.activeNoteId
     },
@@ -88,10 +90,13 @@ export default {
       window.document.execCommand('insertText', false, plainText)
     },
     saveNote() {
-      this.$store.dispatch(ACTIONS.SAVE_NOTE, {
-        id: this.id,
-        title: this.$refs.noteTitle.innerText,
-        body: this.$refs.noteBody.innerHTML,
+      this.$store.dispatch(ACTIONS.AUTO_SAVE_NOTE, {
+        noteId: this.id,
+        noteData: {
+          title: this.$refs.noteTitle.innerText,
+          body: this.$refs.noteBody.innerHTML,
+          updateDate: new Date().toISOString(),
+        },
       })
     },
     toggleDeletionWarning() {
@@ -124,7 +129,7 @@ export default {
     </h1>
     <div class="c-Note__meta">
       <p>
-        <time :datetime="updateDate"> {{ updateDate.toISOString() }}</time>
+        <time :datetime="updateDate"> {{ updateDate }}</time>
       </p>
     </div>
     <div

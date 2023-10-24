@@ -8,7 +8,13 @@
   --c-black-soft: #222222;
   --c-black-mute: #282828;
 
-  --c-indigo: #b3b5fc;
+  --c-blue-lightest: #ebfafe;
+  --c-blue-light: #d1f2fd;
+  --c-seaweed-100: #073742;
+
+  --c-horizon-light: #fff2fc;
+  --c-horizon-100: #ffdef7;
+  --c-horizon-200: #ffbcf0;
 
   --c-divider-light-1: rgba(60, 60, 60, 0.29);
   --c-divider-light-2: rgba(60, 60, 60, 0.12);
@@ -23,7 +29,7 @@
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--c-white);
+  --color-background: var(--c-blue-lightest);
   --color-background-soft: var(--c-white-soft);
   --color-background-mute: var(--c-white-mute);
 
@@ -40,7 +46,7 @@
 
 // @media (prefers-color-scheme: dark) {
 //   :root {
-//     --color-background: var(--c-black);
+//     --color-background: var(--c-seaweed-100);
 //     --color-background-soft: var(--c-black-soft);
 //     --color-background-mute: var(--c-black-mute);
 

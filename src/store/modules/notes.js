@@ -20,7 +20,7 @@ export default {
     /**
      * Loads Notes from a given session ID
      */
-    async [ACTIONS.GET_NOTES]({ rootState, commit, dispatch }) {
+    [ACTIONS.GET_NOTES]({ rootState, commit, dispatch }) {
       API[REQ.GET_NOTES](rootState.session)
         .then(({ data }) => {
           const notesData = data.map((note) => {
@@ -30,6 +30,7 @@ export default {
             }
           })
           commit('setNotes', notesData)
+          commit('setAppLoaded')
         })
         .catch((error) => {
           // Ideally log error to Sentry or similar
@@ -41,7 +42,7 @@ export default {
     /**
      * Effectively creates a new Note
      */
-    async [ACTIONS.ADD_NOTE]({ rootState, state, commit, dispatch }) {
+    [ACTIONS.ADD_NOTE]({ rootState, state, commit, dispatch }) {
       const newNote = {
         title: `New Note #${state.notes.length + 1}`,
         ...BLANK_NOTE_DATA,

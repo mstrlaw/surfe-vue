@@ -100,8 +100,8 @@ export default {
     },
     saveNote() {
       this.$store.dispatch(ACTIONS.AUTO_SAVE_NOTE, {
-        noteId: this.id,
         noteData: {
+          id: this.id,
           title: this.$refs.noteTitle.innerText,
           body: this.$refs.noteBody.innerHTML,
           updateDate: new Date().toISOString(),

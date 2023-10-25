@@ -5,6 +5,7 @@ import { debounce } from '@/utilities.js'
 const BLANK_NOTE_DATA = {
   body: '',
   updateDate: new Date().toISOString(),
+  active: true,
 }
 
 /**
@@ -24,11 +25,11 @@ export default {
       API[REQ.GET_NOTES](rootState.session)
         .then(({ data }) => {
           const notesData = data.map((note) => {
-            return {
-              id: note.id,
-              ...JSON.parse(note.body),
-            }
-          })
+              return {
+                id: note.id,
+                ...JSON.parse(note.body),
+              }
+            })
           commit('setNotes', notesData)
           commit('setAppLoaded')
         })
@@ -73,8 +74,12 @@ export default {
      * Auto save note with debounce method
      */
     [ACTIONS.AUTO_SAVE_NOTE]: debounce(
-      ({ rootState, commit, dispatch }, { noteId, noteData }) => {
-        API[REQ.SAVE_NOTE](rootState.session, noteId, noteData)
+      ({ rootState, state, commit, dispatch }, { noteData }) => {
+        const { active } = state.notes.find((note) => note.id === noteData.id)
+        API[REQ.SAVE_NOTE](rootState.session, noteData.id, {
+          ...noteData,
+          active: active,
+        })
           .then(({ data }) => {
             commit('setNoteData', {
               id: data.id,
@@ -89,16 +94,36 @@ export default {
           })
       }, 1250
     ),
-    [ACTIONS.DELETE_NOTE]({ commit }, noteId) {
-      commit('removeNote', noteId)
+    /**
+     * Saves Note with active as false, to pretend it's been deleted.
+     * We then remove it straight from the store's list.
+     */
+    [ACTIONS.DELETE_NOTE]({ rootState, state, commit, dispatch }, noteId) {
+      const matchedIndex = state.notes.findIndex((note) => note.id === noteId)
+      const noteData = {
+        ...state.notes[matchedIndex],
+        active: false,
+      }
+      API[REQ.SAVE_NOTE](rootState.session, noteId, noteData)
+        .then(() => {
+          commit('removeNote', noteId)
+        })
+        .catch((error) => {
+          console.log(error)
+          dispatch(ACTIONS.SHOW_NOTIFICATION, {
+            message: 'There was an issue saving your note.',
+          })
+        })
     },
   },
   mutations: {
     setNotes(state, notes) {
       // Sort Notes from newest to oldest
-      state.notes = notes.sort((a, b) =>
-        a.updateDate < b.updateDate ? 1 : a.updateDate > b.updateDate ? -1 : 0
-      )
+      state.notes = notes
+        .filter((note) => note.active)
+        .sort((a, b) =>
+          a.updateDate < b.updateDate ? 1 : a.updateDate > b.updateDate ? -1 : 0
+        )
     },
     setNewNote(state, note) {
       state.notes.unshift(note)

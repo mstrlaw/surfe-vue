@@ -1,5 +1,6 @@
 <script>
 import { mapState } from 'vuex'
+import { format, formatDistanceToNow } from 'date-fns'
 import ACTIONS from '@/store/ACTIONS.js'
 import UIButton from '@/components/ui/Button.vue'
 import { STYLE_TYPES, toggleWrappingTag } from '@/components/notes/DOMutils.js'
@@ -37,6 +38,12 @@ export default {
     }),
     isActiveNote() {
       return this.id === this.activeNoteId
+    },
+    lastEditMessage() {
+      return `Edited ${formatDistanceToNow(new Date(this.updateDate))} ago`
+    },
+    readableDate() {
+      return format(new Date(this.updateDate), 'p, MMM do yyyy')
     },
   },
   mounted() {
@@ -128,9 +135,9 @@ export default {
       {{ title }}
     </h1>
     <div class="c-Note__meta">
-      <p>
-        <time :datetime="updateDate"> {{ updateDate }}</time>
-      </p>
+      <small :title="readableDate">
+        <time :datetime="updateDate"> {{ lastEditMessage }}</time>
+      </small>
     </div>
     <div
       ref="noteBody"

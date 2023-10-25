@@ -49,10 +49,11 @@ export default {
   mounted() {
     /**
      * When we mount the compoent, we work with a local instance of
-     * the Note's body.
+     * the Note's body and title.
      * This way we avoid re-rendering the component when saving the Note
      * and all types of infernal caret re-positioning issues.
      */
+    this.localTitle = this.title
     this.localBody = this.body
   },
   methods: {
@@ -128,12 +129,11 @@ export default {
       contenteditable
       class="c-Note__title"
       data-placeholder="Note title"
+      v-text="localTitle"
       @input="saveNote"
       @focus="setActiveNote"
       @paste="handlePastedContent"
-    >
-      {{ title }}
-    </h1>
+    />
     <div class="c-Note__meta">
       <small :title="readableDate">
         <time :datetime="updateDate"> {{ lastEditMessage }}</time>

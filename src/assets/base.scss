@@ -15,6 +15,7 @@
   --c-horizon-light: #fff2fc;
   --c-horizon-100: #ffdef7;
   --c-horizon-200: #ffbcf0;
+  --c-horizon-300: #ffa2ea;
 
   --c-divider-light-1: rgba(60, 60, 60, 0.29);
   --c-divider-light-2: rgba(60, 60, 60, 0.12);
@@ -43,6 +44,7 @@
   --base-gap: 1em;
   --base-radius: 0.25em;
 }
+// Ignoring darkmode for now
 
 // @media (prefers-color-scheme: dark) {
 //   :root {

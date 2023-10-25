@@ -12,6 +12,7 @@ export default {
   },
   data: () => ({
     STYLE_TYPES,
+    localTitle: '',
     localBody: '',
   }),
   props: {
@@ -151,8 +152,17 @@ export default {
     />
     <div class="c-Note__actions">
       <div class="c-Note__actionsLeft">
-        <UIButton user-label="B" @on-click="applyStyle(STYLE_TYPES.BOLD)" />
-        <UIButton user-label="I" @on-click="applyStyle(STYLE_TYPES.ITALIC)" />
+        <UIButton
+          user-label="B"
+          class="m-r"
+          title="Toggle Bold style"
+          @on-click="applyStyle(STYLE_TYPES.BOLD)"
+        />
+        <UIButton
+          user-label="I"
+          title="Toggle Italic style"
+          @on-click="applyStyle(STYLE_TYPES.ITALIC)"
+        />
       </div>
       <UIButton user-label="Delete" @on-click="toggleDeletionWarning" />
     </div>
@@ -164,7 +174,7 @@ export default {
   @include transition(background-color);
   background-color: var(--color-background-soft);
   border-radius: var(--base-radius);
-  border: 0.05em solid var(--color-background-mute);
+  border: 0.05em solid var(--c-blue-light);
   margin-bottom: var(--base-gap);
   padding: var(--base-gap);
   width: 100%;
@@ -175,6 +185,11 @@ export default {
 
   > * {
     padding: 0 calc(var(--base-gap) / 4); // Avoids having text too close to focus outline when editing
+  }
+
+  &__title,
+  &__body {
+    outline-color: var(--c-horizon-300);
   }
 
   &__title {
@@ -193,7 +208,8 @@ export default {
   }
 }
 [contenteditable] {
-  &:hover {
+  &:hover,
+  &:focus {
     @include transition(background-color);
     background-color: var(--color-background-mute);
   }

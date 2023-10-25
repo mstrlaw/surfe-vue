@@ -135,15 +135,18 @@ export default {
     <div class="c-Notification__body">
       <p>{{ message }}</p>
     </div>
-    <div class="c-Notification__actions">
+    <div v-if="hasActions" class="c-Notification__actions">
       <UIButton
         v-if="hasDismiss"
         :user-label="dismissButtonLabel"
+        class="m-r"
+        title="Dismiss notification"
         @on-click="dismissNotification"
       />
       <UIButton
         v-if="hasAccept"
         :user-label="acceptButtonLabel"
+        variation="primary"
         @on-click="acceptNotification"
       />
     </div>
@@ -154,6 +157,7 @@ export default {
 .c-Notification {
   background-color: var(--color-background-mute);
   border-radius: var(--base-radius);
+  border: 0.05em solid var(--c-black-mute);
   bottom: var(--base-gap);
   opacity: 0;
   padding: var(--base-gap);
@@ -166,6 +170,12 @@ export default {
     opacity: 1;
     transform: translateY(0px);
     transition: opacity 0.25s, transform 0.25s;
+  }
+
+  &__actions {
+    margin-top: calc(var(--base-gap) / 2);
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

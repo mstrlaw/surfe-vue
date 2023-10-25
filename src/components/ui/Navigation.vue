@@ -14,10 +14,12 @@ export default {
 </script>
 
 <template>
-  <nav class="c-Nav">
-    <span class="c-Nav__brand">🏄 <em>Surfe Notes</em></span>
+  <nav class="c-Nav" role="navigation">
+    <span class="c-Nav__brand">🏄 <em><b>Surfe Notes</b></em></span>
     <UIButton
       user-label="New Note"
+      title="Create a Note"
+      variation="primary"
       @on-click="$store.dispatch(ACTIONS.ADD_NOTE)"
     />
   </nav>

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import notes from '@/store/modules/notes.js'
+import users from '@/store/modules/users.js'
 import toast from '@/store/modules/notification.js'
 
 // Single session for now. We could have multiple, like "Notebooks".
@@ -28,6 +29,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
     notes,
+    users,
     toast,
   },
   state: {

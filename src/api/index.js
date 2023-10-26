@@ -9,6 +9,7 @@ export const REQUESTS = {
   CREATE_NOTE: 'CREATE_NOTE',
   GET_NOTES: 'GET_NOTES',
   SAVE_NOTE: 'SAVE_NOTE',
+  GET_USERS: 'GET_USERS',
 }
 
 /**
@@ -27,6 +28,9 @@ export const API = {
     return service.put(`/${sessionId}/notes/${noteId}`, {
       body: JSON.stringify(noteData),
     })
+  },
+  [REQUESTS.GET_USERS]: () => {
+    return service.get(`/users`)
   },
   // Not using this one for now
   // GET_NOTE: () => {

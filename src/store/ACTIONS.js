@@ -1,4 +1,5 @@
 import { REQUESTS as REQ } from '@/api/index'
+
 /**
  * Possible store Acions.
  * For convenience we're making the API related actions value equal to our service's requests.
@@ -15,4 +16,5 @@ export default {
   [REQ.CREATE_NOTE]: REQ.CREATE_NOTE,
   [REQ.GET_NOTES]: REQ.GET_NOTES,
   [REQ.SAVE_NOTE]: REQ.SAVE_NOTE,
+  [REQ.GET_USERS]: REQ.GET_USERS,
 }

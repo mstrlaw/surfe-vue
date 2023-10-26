@@ -36,10 +36,12 @@ export default {
     STYLE_TYPES,
     localTitle: '',
     localBody: '',
+    // User mention
     userSearchCriteria: '',
-    // caretIndex: 0,
+    matchedUsers: [],
     isMentioningUser: false,
     isFocusingMenu: false,
+    currentMenuIndex: 0,
     caretIsWithinMention: false,
     caretPrecedingCharacter: '',
     mentionMenuPosX: 0,
@@ -66,6 +68,8 @@ export default {
   computed: {
     ...mapState({
       activeNoteId: (state) => state.notes.activeNoteId,
+      hasFetchedUsers: (state) => state.users.hasFetchedUsers,
+      users: (state) => state.users.users,
     }),
     isActiveNote() {
       return this.id === this.activeNoteId
@@ -75,6 +79,22 @@ export default {
     },
     readableDate() {
       return format(new Date(this.updateDate), 'p, MMM do yyyy')
+    },
+  },
+  watch: {
+    userSearchCriteria(value) {
+      if (value.length > 0) {
+        this.matchedUsers = this.users.filter((user) => {
+          const { first_name, last_name, username } = user
+
+          // Check if any of the fields contain the partial match
+          return (
+            first_name.toLowerCase().includes(value) ||
+            last_name.toLowerCase().includes(value) ||
+            username.toLowerCase().includes(value)
+          )
+        })
+      }
     },
   },
   mounted() {
@@ -166,9 +186,13 @@ export default {
 
       // Focus user menu selection on tab press
       if (keyCode === KEY.TAB && this.isMentioningUser) {
-        event.preventDefault()
-        this.isFocusingMenu = true
-        this.$refs.result.focus()
+        // Focus first child result, if any
+        if (this.$refs.userList.children.length > 0) {
+          event.preventDefault()
+          this.isFocusingMenu = true
+          this.currentMenuIndex = 0
+          this.$refs.userList.children[0].focus()
+        }
       }
       // Blur users menu on esc press (re-focus Notes body)
       else if (keyCode === KEY.ESCAPE && this.isFocusingMenu) {
@@ -182,11 +206,12 @@ export default {
         this.$refs.noteBody.focus()
       }
     },
-    onBodyKeyup({ key, keyCode }) {
+    onBodyKeyup(event) {
       // In case we'd want to trigger other things
-      this.checkForMentionTrigger(key, keyCode)
+      this.checkForMentionTrigger(event)
     },
-    checkForMentionTrigger(key, keyCode) {
+    checkForMentionTrigger(event) {
+      const { key, keyCode } = event
       /**
        * When user types in the @ symbol, we initiate the mention UI/UX
        */
@@ -198,6 +223,11 @@ export default {
         } else {
           this.resetMentionFlow()
         }
+      }
+      // When user uses arrow down to access user menu
+      else if (keyCode === KEY.ARROW_DOWN && this.isMentioningUser) {
+        event.preventDefault()
+        this.focusNextResult()
       }
       // When user uses arrow, trigger Mention highlight method
       // Right + !this.caretIsWithinMention prevents the caret to remain "trapped" inside the span element
@@ -212,7 +242,11 @@ export default {
       // If user presses backspace, isMentioningUserm and
       //  caretPrecedingCharacter (i.e. recently deleted char) is the @ symbol
       // then stop the mention UI/UX
-      else if (keyCode === KEY.BACKSPACE && this.isMentioningUser) {
+      else if (
+        keyCode === KEY.BACKSPACE &&
+        this.isMentioningUser
+      ) {
+        this.userSearchCriteria = this.userSearchCriteria.slice(0, -1)
         if (this.caretPrecedingCharacter === KEY.AT) {
           this.resetMentionFlow()
         }
@@ -228,10 +262,17 @@ export default {
       /**
        * Everytime the user types an alphanumerical char while isMentioningUser
        * store the value in userSearchCriteria to later match the HTML to replace
-       * with selected mention uppon applyMention
+       * with selected mention uppon applyMention.
+       *
+       * Also, we perform the user query to the database (once)
+       * and filter the stored results.
        */
-      if (this.isMentioningUser && /^[a-zA-Z]$/.test(key)) {
+      if (this.isMentioningUser && /^[a-zA-Z]$/.test(key) && keyCode !== KEY.BACKSPACE) {
         this.userSearchCriteria += key
+
+        if (!this.hasFetchedUsers) {
+          this.$store.dispatch(ACTIONS.GET_USERS)
+        }
       }
     },
     /**
@@ -241,18 +282,35 @@ export default {
     onMentionOptionKeydown(event) {
       const { keyCode } = event
       if (keyCode === KEY.ARROW_UP) {
-        console.log('going up')
+        this.focusPreviousResult()
       } else if (keyCode === KEY.ARROW_DOWN) {
-        console.log('going down')
+        event.preventDefault()
+        this.focusNextResult()
       } else if (keyCode === KEY.TAB) {
         event.preventDefault()
-        this.resetMentionFlow()
-        this.$refs.noteBody.focus()
-        console.log('get next item or end mention')
+        // Go down
+        this.focusNextResult()
       } else if (keyCode === KEY.ESCAPE) {
-        console.log('close menu')
         this.resetMentionFlow()
         this.$refs.noteBody.focus()
+      }
+    },
+    focusPreviousResult() {
+      if (this.currentMenuIndex - 1 >= 0) {
+        this.currentMenuIndex -= 1
+        this.$refs.userList.children[this.currentMenuIndex].focus()
+      } else {
+        this.currentMenuIndex = this.$refs.userList.children.length - 1
+        this.$refs.userList.children[this.currentMenuIndex].focus()
+      }
+    },
+    focusNextResult() {
+      if (this.currentMenuIndex + 1 < this.$refs.userList.children.length) {
+        this.currentMenuIndex += 1
+        this.$refs.userList.children[this.currentMenuIndex].focus()
+      } else {
+        this.currentMenuIndex = 0
+        this.$refs.userList.children[this.currentMenuIndex].focus()
       }
     },
     /**
@@ -286,6 +344,8 @@ export default {
         this.isFocusingMenu = false
         this.isMentioningUser = false
         this.userSearchCriteria = ''
+        this.currentMenuIndex = 0
+        this.matchedUsers = []
         this.mentionMenuPosX = 0
         this.mentionMenuPosY = 0
       }, 50)
@@ -355,13 +415,16 @@ export default {
       :style="`top:${mentionMenuPosY}px;left:${mentionMenuPosX}px;`"
     >
       <a
-        ref="result"
+        v-for="user in matchedUsers"
+        :key="user.username"
         href="#"
         class="c-UserList__result"
-        @click="applyMention(`username${Math.round(Math.random() * 100)}`)"
-        @keypress.enter="applyMention(`username${Math.round(Math.random() * 100)}`)"
+        @click="applyMention(user.username)"
+        @keypress.enter="applyMention(user.username)"
         @keydown="onMentionOptionKeydown"
-      >@username</a>
+      >
+        <span>{{ user.first_name }} {{ user.last_name }} ({{ user.username }})</span>
+      </a>
     </div>
   </article>
 </template>
@@ -425,6 +488,7 @@ export default {
   ::v-deep .u-Mention {
     position: relative;
     z-index: 1;
+    text-shadow: 0px 0px 0px var(--c-black-soft);
 
     &:before {
       content: '';
@@ -444,9 +508,31 @@ export default {
 }
 
 .c-UserList {
-  background: red;
+  background-color: var(--c-horizon-200);
+  border-radius: var(--base-radius);
+  border: 0.05em solid var(--c-blue-light);
+  max-height: calc(var(--base-gap) * 16);
+  overflow: auto;
+  padding: 0;
   position: fixed;
   transform: translate3d(0, 24px, 0);
   z-index: 50;
+
+  &__result {
+    @include transition(background-color);
+    display: block;
+    text-decoration: none;
+
+    span {
+      display: block;
+      padding: calc(var(--base-gap) / 4) calc(var(--base-gap) / 2);
+    }
+
+    &:hover,
+    &:focus {
+      @include transition(background-color);
+      background-color: var(--c-horizon-300);
+    }
+  }
 }
 </style>

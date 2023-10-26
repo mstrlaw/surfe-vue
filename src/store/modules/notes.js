@@ -25,11 +25,11 @@ export default {
       API[REQ.GET_NOTES](rootState.session)
         .then(({ data }) => {
           const notesData = data.map((note) => {
-              return {
-                id: note.id,
-                ...JSON.parse(note.body),
-              }
-            })
+            return {
+              id: note.id,
+              ...JSON.parse(note.body),
+            }
+          })
           commit('setNotes', notesData)
           commit('setAppLoaded')
         })

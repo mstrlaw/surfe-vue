@@ -7,7 +7,8 @@
 ### Running the project
 1. `cd` into `surfe-vue`
 2. Install dependencies with `npm i`
-3. Run it with `npm run dev`
+3. Create a `.env.local` file and add the values described in **Environment Variables** further below
+4. Run it with `npm run dev`
 
 ### Build it
 
@@ -29,27 +30,35 @@ npm run lint
 
 ## Implementation Details
 
+### Environment Variables
+`VITE_API_ENDPOINT=https://challenge.surfe.com`
+
 ### UI/UX 
 
 1. The UI follows a mobile-first approach, reflected by how the breakpoint mixins are applied;
 
-## Project Structure
+### Project Structure
 
 - `api/` holds our API service;
 - `store/` has a Vuex data store, with the context of `notes`, `users` and `notifications` split in modules;
 - `components/` hold our Vue components for Note, as well as `ui/` with individual reusable UI componentes;
 - `assets/` holds our SCSS;
 
-## CSS
+### CSS
 
 1. CSS class naming follows BEMIT convention;
 2. CSS attributes are ordered alphabetically;
 3. We make use of SCSS preprocessor mainly for Mixins and Nesting; Native CSS custom properties are prefered over SCSS variables;
 
-## Editable Content
+### Editable Content
 
 1. Editing of the Note's body is done with our own implementation of a `contenteditable` element;
 2. Mentioning a user works much like Slack: to trigger a mention suggestion the user must type in `@` followed by the string. Once the menu shows up they can navigate to the corresponding match and select it with the keyboard;
+
+### Deployment
+
+1. Project is hosted on Netlify;
+2. Env variables must be set within Netlify directly;
 
 ### Session Loading Lifecycle
 
